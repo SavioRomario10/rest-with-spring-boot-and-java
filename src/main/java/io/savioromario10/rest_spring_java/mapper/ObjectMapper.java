@@ -9,11 +9,11 @@ import java.util.List;
 public class ObjectMapper{
     private static Mapper mapper = DozerBeanMapperBuilder.buildDefault();
 
-    public static <O, D> D parseObject (O origin, Class<D> destination){
+    public static <O, D> D parceObject (O origin, Class<D> destination){
         return mapper.map(origin, destination);
     }
 
-    public static <O, D> List<D> parceListObject(List<D> origin, Class<D> destination){
+    public static <O, D> List<D> parceListObject(List<O> origin, Class<D> destination){
 
         List<D> destinationObject = new ArrayList<D>();
 

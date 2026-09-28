@@ -8,14 +8,18 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
 
   sql:
     init:
       mode: always
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
 logging:
   level:
-    root: WARN
+    root: INFO
     io.savioromario10: DEBUG

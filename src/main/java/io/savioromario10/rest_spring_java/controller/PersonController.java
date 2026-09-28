@@ -1,7 +1,9 @@
 package io.savioromario10.rest_spring_java.controller;
 
-import io.savioromario10.rest_spring_java.model.Person;
+import io.savioromario10.rest_spring_java.data.dto.v1.PersonDTO;
+import io.savioromario10.rest_spring_java.data.dto.v2.PersonDTOV2;
 import io.savioromario10.rest_spring_java.service.PersonService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/person")
+@RequestMapping("/api/person")
 public class PersonController {
 
     @Autowired
@@ -18,29 +20,37 @@ public class PersonController {
 
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Person>> findAll(){
-        return ResponseEntity.ok(service.findnAll());
+    public ResponseEntity<List<PersonDTO>> findAll(){
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping(
             value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Person> findById(@PathVariable("id") Long id){
+    public ResponseEntity<PersonDTO> findById(@PathVariable("id") Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Person> create(@RequestBody Person person){
-        return ResponseEntity.status(201).body(service.create(person));
+    public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO personDTO){
+        return ResponseEntity.status(201).body(service.create(personDTO));
+    }
+
+    @PostMapping(
+            value = "/v2",
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PersonDTOV2> create(@RequestBody PersonDTOV2 personDTOV2){
+        return ResponseEntity.status(201).body(service.createV2(personDTOV2));
     }
 
     @PutMapping(
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Person> update(@RequestBody Person person){
-        return ResponseEntity.ok(service.update(person));
+    public ResponseEntity<PersonDTO> update(@RequestBody PersonDTO personDTO){
+        return ResponseEntity.ok(service.update(personDTO));
     }
 
     @DeleteMapping(value = "/{id}")

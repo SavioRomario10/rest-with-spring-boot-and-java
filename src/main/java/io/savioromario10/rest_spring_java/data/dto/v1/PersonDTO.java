@@ -1,4 +1,4 @@
-package io.savioromario10.rest_spring_java.data.dto;
+package io.savioromario10.rest_spring_java.data.dto.v1;
 
 import java.io.Serializable;
 import java.util.Objects;
