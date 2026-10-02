@@ -23,3 +23,8 @@ logging:
   level:
     root: INFO
     io.savioromario10: DEBUG
+
+spring-doc:
+  paths-to-match: /api/**/v1/**
+  swagger-ui:
+    use-root-path: true

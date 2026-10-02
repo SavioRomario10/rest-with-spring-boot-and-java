@@ -3,6 +3,7 @@ package io.savioromario10.rest_spring_java.service;
 import io.savioromario10.rest_spring_java.controller.PersonController;
 import io.savioromario10.rest_spring_java.data.dto.v1.PersonDTO;
 import io.savioromario10.rest_spring_java.data.dto.v2.PersonDTOV2;
+import io.savioromario10.rest_spring_java.exception.RequiredObjectsNullException;
 import io.savioromario10.rest_spring_java.exception.ResourceNotFoundException;
 import io.savioromario10.rest_spring_java.mapper.custom.PersonMapper;
 import io.savioromario10.rest_spring_java.model.Person;
@@ -59,6 +60,9 @@ public class PersonService {
     }
 
     public PersonDTO create(PersonDTO person){
+
+        if(person == null) throw new RequiredObjectsNullException();
+
         logger.info("create one person");
 
         var entity = parceObject(person, Person.class);
@@ -79,6 +83,9 @@ public class PersonService {
     }
 
     public PersonDTO update(PersonDTO person){
+
+        if(person == null) throw new RequiredObjectsNullException();
+
         logger.info("update one person");
 
         Person entity = repository.findById(person.getId()).orElseThrow(
