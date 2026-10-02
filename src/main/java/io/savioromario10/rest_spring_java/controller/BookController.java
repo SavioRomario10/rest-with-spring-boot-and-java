@@ -1,25 +1,20 @@
 package io.savioromario10.rest_spring_java.controller;
 
-import io.savioromario10.rest_spring_java.controller.docs.PersonControllerDocs;
-import io.savioromario10.rest_spring_java.data.dto.v1.PersonDTO;
-import io.savioromario10.rest_spring_java.data.dto.v2.PersonDTOV2;
-import io.savioromario10.rest_spring_java.service.PersonService;
-
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.savioromario10.rest_spring_java.controller.docs.BookControllerDocs;
+import io.savioromario10.rest_spring_java.data.dto.v1.BookDTO;
+import io.savioromario10.rest_spring_java.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/api/person")
-@Tag(name="Person Endpoints", description = "Endpoints for Managing People")
-public class PersonController implements PersonControllerDocs {
-
+@Controller
+public class BookController implements BookControllerDocs {
     @Autowired
-    private PersonService service;
+    private BookService service;
 
     @Override
     @GetMapping(
@@ -27,7 +22,7 @@ public class PersonController implements PersonControllerDocs {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE})
-    public ResponseEntity<List<PersonDTO>> findAll(){
+    public ResponseEntity<List<BookDTO>> findAll(){
         return ResponseEntity.ok(service.findAll());
     }
 
@@ -38,7 +33,7 @@ public class PersonController implements PersonControllerDocs {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE})
-    public ResponseEntity<PersonDTO> findById(@PathVariable("id") Long id){
+    public ResponseEntity<BookDTO> findById(@PathVariable("id") Long id){
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -52,23 +47,8 @@ public class PersonController implements PersonControllerDocs {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE})
-    public ResponseEntity<PersonDTO> create(@RequestBody PersonDTO personDTO){
-        return ResponseEntity.status(201).body(service.create(personDTO));
-    }
-
-    @Override
-    @PostMapping(
-            value = "/v2",
-            produces = {
-                    MediaType.APPLICATION_JSON_VALUE,
-                    MediaType.APPLICATION_XML_VALUE,
-                    MediaType.APPLICATION_YAML_VALUE},
-            consumes = {
-                    MediaType.APPLICATION_JSON_VALUE,
-                    MediaType.APPLICATION_XML_VALUE,
-                    MediaType.APPLICATION_YAML_VALUE})
-    public ResponseEntity<PersonDTOV2> create(@RequestBody PersonDTOV2 personDTOV2){
-        return ResponseEntity.status(201).body(service.createV2(personDTOV2));
+    public ResponseEntity<BookDTO> create(@RequestBody BookDTO BookDTO){
+        return ResponseEntity.status(201).body(service.create(BookDTO));
     }
 
     @Override
@@ -81,8 +61,8 @@ public class PersonController implements PersonControllerDocs {
                     MediaType.APPLICATION_JSON_VALUE,
                     MediaType.APPLICATION_XML_VALUE,
                     MediaType.APPLICATION_YAML_VALUE})
-    public ResponseEntity<PersonDTO> update(@RequestBody PersonDTO personDTO){
-        return ResponseEntity.ok(service.update(personDTO));
+    public ResponseEntity<BookDTO> update(@RequestBody BookDTO BookDTO){
+        return ResponseEntity.ok(service.update(BookDTO));
     }
 
     @Override
