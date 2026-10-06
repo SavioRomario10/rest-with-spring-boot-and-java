@@ -3,7 +3,7 @@ package io.savioromario10.rest_spring_java.data.dto.v1;
 import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 public class BookDTO extends RepresentationModel<BookDTO> {
@@ -13,7 +13,7 @@ public class BookDTO extends RepresentationModel<BookDTO> {
     private String author;
     private String title;
     private Double price;
-    private LocalDateTime launchDate;
+    private Date launchDate;
 
     public BookDTO() {}
 
@@ -29,10 +29,10 @@ public class BookDTO extends RepresentationModel<BookDTO> {
     public void setId(Long id) {
         this.id = id;
     }
-    public LocalDateTime getLaunchDate() {
+    public Date getLaunchDate() {
         return launchDate;
     }
-    public void setLaunchDate(LocalDateTime launchDate) {
+    public void setLaunchDate(Date launchDate) {
         this.launchDate = launchDate;
     }
     public Double getPrice() {

@@ -13,7 +13,7 @@ public class OpenApiConfig {
     OpenAPI customOpenAPI(){
         return new OpenAPI()
                 .info(new Info()
-                        .title("RESTful API with Sptring")
+                        .title("RESTful API with Spring")
                         .version("v1")
                         .description("Using Java 17, Spring Boot 3.1.2, Maven, PostgreSQL")
                         .termsOfService("https://github.com/SavioRomario10")

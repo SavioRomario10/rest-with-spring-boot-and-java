@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -19,11 +20,11 @@ public class Book implements Serializable {
     private String author;
     @Column(name = "title", nullable = false, length = 100)
     private String title;
-    @Column(name = "price", nullable = false, precision = 65, scale = 2)
+    @Column(name = "price", nullable = false)
     private Double price;
     @Column(name = "launch_date", nullable = false)
     @Temporal(TemporalType.DATE)
-    private LocalDateTime launchDate;
+    private Date launchDate;
 
     public Book() {}
 
@@ -39,10 +40,10 @@ public class Book implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public LocalDateTime getLaunchDate() {
+    public Date getLaunchDate() {
         return launchDate;
     }
-    public void setLaunchDate(LocalDateTime launchDate) {
+    public void setLaunchDate(Date launchDate) {
         this.launchDate = launchDate;
     }
     public Double getPrice() {
