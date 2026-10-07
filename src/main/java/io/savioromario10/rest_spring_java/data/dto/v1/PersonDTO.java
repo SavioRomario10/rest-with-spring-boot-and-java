@@ -36,6 +36,8 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     //@JsonSerialize(using = GenderSerializer.class)
     private String gender;
 
+    private Boolean enabled;
+
     //private String sensitiveData;
 
     public PersonDTO() {}
@@ -82,6 +84,12 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+    public Boolean getEnabled() {
+        return enabled;
+    }
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
     /*
     public String getSensitiveData() {
         return sensitiveData;
@@ -94,18 +102,20 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof PersonDTO personDTO)) return false;
+        if (!super.equals(o)) return false;
         return Objects.equals(getId(), personDTO.getId()) &&
                 Objects.equals(getFirstName(), personDTO.getFirstName()) &&
                 Objects.equals(getLastName(), personDTO.getLastName()) &&
                 Objects.equals(getPhoneNumber(), personDTO.getPhoneNumber()) &&
                 Objects.equals(getBithDay(), personDTO.getBithDay()) &&
                 Objects.equals(getAddress(), personDTO.getAddress()) &&
-                Objects.equals(getGender(), personDTO.getGender());
+                Objects.equals(getGender(), personDTO.getGender()) &&
+                Objects.equals(getEnabled(), personDTO.getEnabled());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getPhoneNumber(), getBithDay(), getAddress(),
-                getGender());
+        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getPhoneNumber(), getBithDay(),
+                getAddress(), getGender(), getEnabled());
     }
 }

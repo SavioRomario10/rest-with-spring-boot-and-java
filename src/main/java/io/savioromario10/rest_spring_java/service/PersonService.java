@@ -9,6 +9,7 @@ import io.savioromario10.rest_spring_java.mapper.custom.PersonMapper;
 import io.savioromario10.rest_spring_java.model.Person;
 import io.savioromario10.rest_spring_java.repository.PersonRepository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
@@ -113,6 +114,23 @@ public class PersonService {
         repository.delete(entity);
     }
 
+    @Transactional
+    public PersonDTO disablePerson(Long id){
+        logger.info("disable one person");
+
+        repository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("No records found for this ID"));
+
+        repository.disablePerson(id);
+
+        var entity = repository.findById(id).get();
+        var dto = parceObject(entity, PersonDTO.class);
+        addHateoasLink(dto);
+
+        return dto;
+    }
+
     private void addHateoasLink(PersonDTO dto) {
 
         dto.add(linkTo(methodOn(PersonController.class)
@@ -129,5 +147,8 @@ public class PersonService {
 
         dto.add(linkTo(methodOn(PersonController.class)
                 .delete(dto.getId())).withRel("delete").withType("DELETE"));
+
+        dto.add(linkTo(methodOn(PersonController.class)
+                .disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
     }
 }
