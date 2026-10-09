@@ -10,14 +10,18 @@ import io.savioromario10.rest_spring_java.model.Person;
 import io.savioromario10.rest_spring_java.repository.PersonRepository;
 
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import java.util.List;
-
-import static io.savioromario10.rest_spring_java.mapper.ObjectMapper.parceListObject;
 import static io.savioromario10.rest_spring_java.mapper.ObjectMapper.parceObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,16 +35,30 @@ public class PersonService {
     @Autowired
     PersonMapper converter;
 
+    @Autowired
+    PagedResourcesAssembler<PersonDTO> assembler;
+
     private Logger logger = LoggerFactory.getLogger(PersonService.class.getName());
 
-    public List<PersonDTO> findAll(){
+    public PagedModel<EntityModel<PersonDTO>> findAll(Pageable pageable) {
         logger.info("finding all people");
 
-        var persons = parceListObject(repository.findAll(), PersonDTO.class);
+        var people = repository.findAll(pageable);
+        var peopleWithLinks = people.map(
+                person -> {
+                    var dto = parceObject(person, PersonDTO.class);
+                    addHateoasLink(dto);
+                    return dto;
+                }
+        );
 
-        persons.forEach(this::addHateoasLink);
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(PersonController.class)
+                        .findAll(pageable.getPageNumber(), pageable.getPageSize(),
+                                String.valueOf(pageable.getSort())))
+                .withSelfRel();
 
-        return persons;
+        return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
     public PersonDTO findById(long id) {
@@ -137,7 +155,7 @@ public class PersonService {
                 .findById(dto.getId())).withSelfRel().withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class)
-                .findAll()).withRel("findAll").withType("GET"));
+                .findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
 
         dto.add(linkTo(methodOn(PersonController.class)
                 .create(dto)).withRel("create").withType("POST"));
