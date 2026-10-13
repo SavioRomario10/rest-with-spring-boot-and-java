@@ -2,10 +2,12 @@ package io.savioromario10.rest_spring_java.data.dto.v1;
 
 import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.util.Date;
 import java.util.Objects;
 
+@Relation(collectionRelation = "books")
 public class BookDTO extends RepresentationModel<BookDTO> {
     private static final long serialVersionUID = 1L;
 

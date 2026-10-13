@@ -6,14 +6,19 @@ import io.savioromario10.rest_spring_java.exception.RequiredObjectsNullException
 import io.savioromario10.rest_spring_java.exception.ResourceNotFoundException;
 import io.savioromario10.rest_spring_java.model.Book;
 import io.savioromario10.rest_spring_java.repository.BookRepository;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
-import static io.savioromario10.rest_spring_java.mapper.ObjectMapper.parceListObject;
 import static io.savioromario10.rest_spring_java.mapper.ObjectMapper.parceObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -23,16 +28,28 @@ public class BookService {
     @Autowired
     BookRepository repository;
 
+    @Autowired
+    PagedResourcesAssembler<BookDTO> assembler;
+
     private Logger logger = LoggerFactory.getLogger(BookService.class.getName());
 
-    public List<BookDTO> findAll(){
+    public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable){
         logger.info("finding all people");
 
-        var Books = parceListObject(repository.findAll(), BookDTO.class);
+        var books = repository.findAll(pageable);
 
-        Books.forEach(this::addHateoasLink);
+        var booksWithLinks = books.map(book -> {
+            BookDTO dto = parceObject(book, BookDTO.class);
+            addHateoasLink(dto);
+            return dto;
+        });
 
-        return Books;
+        Link findAllLink = WebMvcLinkBuilder.linkTo(
+                WebMvcLinkBuilder.methodOn(BookController.class)
+                        .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))
+                ).withSelfRel().withType("GET");
+
+        return assembler.toModel(booksWithLinks, findAllLink);
     }
 
     public BookDTO findById(long id) {
@@ -104,7 +121,7 @@ public class BookService {
                 .findById(dto.getId())).withSelfRel().withType("GET"));
 
         dto.add(linkTo(methodOn(BookController.class)
-                .findAll()).withRel("findAll").withType("GET"));
+                .findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
 
         dto.add(linkTo(methodOn(BookController.class)
                 .create(dto)).withRel("create").withType("POST"));
