@@ -4,6 +4,9 @@ server:
 cors:
   originPatterns: http://localhost:8080,http://localhost:3000
 
+file:
+  upload-dir: /uploads
+
 spring:
   application:
     name: rest_spring_java
@@ -24,6 +27,13 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
+
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 logging:
   level:
