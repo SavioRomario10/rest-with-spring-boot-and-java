@@ -7,6 +7,9 @@ import io.savioromario10.rest_spring_java.exception.BadRequestException;
 import io.savioromario10.rest_spring_java.exception.FileStorageException;
 import io.savioromario10.rest_spring_java.exception.RequiredObjectsNullException;
 import io.savioromario10.rest_spring_java.exception.ResourceNotFoundException;
+import io.savioromario10.rest_spring_java.file.exporter.MediaTypes;
+import io.savioromario10.rest_spring_java.file.exporter.contract.FileExporter;
+import io.savioromario10.rest_spring_java.file.exporter.factory.FileExporterFactory;
 import io.savioromario10.rest_spring_java.file.importer.contract.FileImporter;
 import io.savioromario10.rest_spring_java.file.importer.factory.FileImporterFactory;
 import io.savioromario10.rest_spring_java.mapper.custom.PersonMapper;
@@ -16,6 +19,7 @@ import io.savioromario10.rest_spring_java.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -47,6 +51,9 @@ public class PersonService {
 
     @Autowired
     FileImporterFactory importer;
+
+    @Autowired
+    FileExporterFactory exporter;
 
     @Autowired
     PagedResourcesAssembler<PersonDTO> assembler;
@@ -84,6 +91,21 @@ public class PersonService {
         addHateoasLink(dto);
 
         return dto;
+    }
+
+    public Resource exportPage (Pageable pageable, String acceptHeader) {
+        logger.info("exporting a people page");
+
+        var people = repository.findAll(pageable)
+                .map(person -> parceObject(person, PersonDTO.class)).getContent();
+
+        try {
+            FileExporter exporter = this.exporter.getExporter(acceptHeader);
+
+            return exporter.exportFile(people);
+        }catch (Exception e){
+            throw new RuntimeException("Error during file export", e);
+        }
     }
 
     public PersonDTO create(PersonDTO person){
@@ -228,5 +250,9 @@ public class PersonService {
 
         dto.add(linkTo(methodOn(PersonController.class))
                 .slash("massCreation").withRel("massCreation").withType("POST"));
+
+        dto.add(linkTo(methodOn(PersonController.class)
+                .exportPage(1, 12, "asc", null))
+                .withRel("exportType").withType("GET").withTitle("Export people"));
     }
 }

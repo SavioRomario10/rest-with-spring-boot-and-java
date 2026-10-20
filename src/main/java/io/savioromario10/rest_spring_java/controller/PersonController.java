@@ -2,6 +2,7 @@ package io.savioromario10.rest_spring_java.controller;
 
 import io.savioromario10.rest_spring_java.data.dto.v1.PersonDTO;
 import io.savioromario10.rest_spring_java.data.dto.v2.PersonDTOV2;
+import io.savioromario10.rest_spring_java.file.exporter.MediaTypes;
 import io.savioromario10.rest_spring_java.service.PersonService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,13 +12,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -301,5 +305,54 @@ public class PersonController{
     )
     public List<PersonDTO> massCreation(@RequestParam("file") MultipartFile file){
         return service.massCreation(file);
+    }
+
+    @GetMapping(
+            value = "exportPage",
+            produces = {
+                    MediaTypes.APPLICATION_XLSX_VALUE,
+                    MediaTypes.APPLICATION_CSV_VALUE
+            })
+    @Operation(
+            summary = "Expport people",
+            description = "Export a page of people",
+            tags = {"Person"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content = {
+                                    @Content( mediaType = MediaTypes.APPLICATION_XLSX_VALUE ),
+                                    @Content( mediaType = MediaTypes.APPLICATION_CSV_VALUE )
+                            }
+                    ),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
+            }
+    )
+    public ResponseEntity<Resource> exportPage(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "direction", defaultValue = "asc") String direction,
+            HttpServletRequest request
+    ){
+
+        var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, "firstName"));
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+        Resource file = service.exportPage(pageable, acceptHeader);
+
+        String contentType =acceptHeader  != null ? acceptHeader : "application/octet-stream";
+        String fileExtension = MediaTypes.APPLICATION_XLSX_VALUE.equalsIgnoreCase(acceptHeader) ? ".xlsx" : ".csv";
+        var fileName = "people_exported" + fileExtension;
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName +"\"")
+                .body(file);
     }
 }
