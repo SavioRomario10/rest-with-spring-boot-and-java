@@ -7,7 +7,6 @@ import io.savioromario10.rest_spring_java.exception.BadRequestException;
 import io.savioromario10.rest_spring_java.exception.FileStorageException;
 import io.savioromario10.rest_spring_java.exception.RequiredObjectsNullException;
 import io.savioromario10.rest_spring_java.exception.ResourceNotFoundException;
-import io.savioromario10.rest_spring_java.file.exporter.MediaTypes;
 import io.savioromario10.rest_spring_java.file.exporter.contract.FileExporter;
 import io.savioromario10.rest_spring_java.file.exporter.factory.FileExporterFactory;
 import io.savioromario10.rest_spring_java.file.importer.contract.FileImporter;

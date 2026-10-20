@@ -3,7 +3,6 @@ package io.savioromario10.rest_spring_java.model;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 

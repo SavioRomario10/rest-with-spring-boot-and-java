@@ -1,8 +1,6 @@
 package io.savioromario10.rest_spring_java.data.dto.v1;
 
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.savioromario10.rest_spring_java.serializer.GenderSerializer;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
