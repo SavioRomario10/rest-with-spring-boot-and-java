@@ -22,6 +22,7 @@
 		<java.version>21</java.version>
 		<dozer.version>7.0.0</dozer.version>
 		<springdoc.version>2.8.13</springdoc.version>
+        <jasper.version>7.0.1</jasper.version>
 	</properties>
 
 	<dependencies>
@@ -112,6 +113,25 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>5.3.0</version>
+		</dependency>
+
+        <!-- Jasper -->
+        <dependency>
+            <groupId>net.sf.jasperreports</groupId>
+            <artifactId>jasperreports</artifactId>
+            <version>${jasper.version}</version>
+        </dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>${jasper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-pdf</artifactId>
+			<version>${jasper.version}</version>
 		</dependency>
 
 		<!-- Testes -->

@@ -4,6 +4,7 @@ import io.savioromario10.rest_spring_java.exception.BadRequestException;
 import io.savioromario10.rest_spring_java.file.exporter.MediaTypes;
 import io.savioromario10.rest_spring_java.file.exporter.contract.FileExporter;
 import io.savioromario10.rest_spring_java.file.exporter.impl.CsvExporter;
+import io.savioromario10.rest_spring_java.file.exporter.impl.PdfExporter;
 import io.savioromario10.rest_spring_java.file.exporter.impl.XlsxExporter;
 
 import org.slf4j.Logger;
@@ -29,20 +30,24 @@ public class FileExporterFactory {
 
             return context.getBean(XlsxExporter.class);
 
-        } else {
+        } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_CSV_VALUE)) {
 
-            if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_CSV_VALUE)) {
+            logger.info("CSV file detected");
 
-                logger.info("CSV file detected");
+            return context.getBean(CsvExporter.class);
 
-                return context.getBean(CsvExporter.class);
+        } else if (acceptHeader.equalsIgnoreCase(MediaTypes.APPLICATION_PDF_VALUE)) {
 
-            }else {
+        logger.info("CSV file detected");
 
-                logger.error("File type not supported!");
+        return context.getBean(PdfExporter.class);
 
-                throw new BadRequestException("File type not supported!");
-            }
+        }else {
+
+            logger.error("File type not supported!");
+
+            throw new BadRequestException("File type not supported!");
         }
+
     }
 }
