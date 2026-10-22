@@ -1,11 +1,15 @@
 package io.savioromario10.rest_spring_java.data.dto.v1;
 
 import com.fasterxml.jackson.annotation.*;
+
+import io.savioromario10.rest_spring_java.model.Book;
+
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @JsonPropertyOrder({"id", "first_name", "last_name", "address", "gender"})
@@ -37,6 +41,13 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     private String gender;
 
     private Boolean enabled;
+
+    private String profile_url;
+
+    private String photo_url;
+
+    @JsonIgnore
+    private List<Book> books;
 
     //private String sensitiveData;
 
@@ -90,7 +101,26 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+    public List<Book> getBooks() {
+        return books;
+    }
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+    public String getPhoto_url() {
+        return photo_url;
+    }
+    public void setPhoto_url(String photo_url) {
+        this.photo_url = photo_url;
+    }
+    public String getProfile_url() {
+        return profile_url;
+    }
+    public void setProfile_url(String profile_url) {
+        this.profile_url = profile_url;
+    }
 
+    @JsonIgnore
     public String getName(){
         return(firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
     }
@@ -115,12 +145,15 @@ public class PersonDTO extends RepresentationModel<PersonDTO> implements Seriali
                 Objects.equals(getBithDay(), personDTO.getBithDay()) &&
                 Objects.equals(getAddress(), personDTO.getAddress()) &&
                 Objects.equals(getGender(), personDTO.getGender()) &&
-                Objects.equals(getEnabled(), personDTO.getEnabled());
+                Objects.equals(getEnabled(), personDTO.getEnabled()) &&
+                Objects.equals(getProfile_url(), personDTO.getProfile_url()) &&
+                Objects.equals(getPhoto_url(), personDTO.getPhoto_url()) &&
+                Objects.equals(getBooks(), personDTO.getBooks());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getPhoneNumber(), getBithDay(),
-                getAddress(), getGender(), getEnabled());
+                getAddress(), getGender(), getEnabled(), getProfile_url(), getPhoto_url(), getBooks());
     }
 }
