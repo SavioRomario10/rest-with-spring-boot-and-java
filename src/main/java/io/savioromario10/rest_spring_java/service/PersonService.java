@@ -92,6 +92,26 @@ public class PersonService {
         return dto;
     }
 
+    public Resource exportingById(long id, String acceptHeader) {
+        logger.info("Exporting one person");
+
+        var person = repository.findById(id)
+                .map(entity -> parceObject(entity, PersonDTO.class))
+                .orElseThrow(() ->
+        {
+            logger.warn("No records found for this ID");
+
+            return new ResourceNotFoundException("No records found for this ID");
+        });
+
+        try {
+            FileExporter exporter = this.exporter.getExporter(acceptHeader);
+            return exporter.exportPerson(person);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public Resource exportPage (Pageable pageable, String acceptHeader) {
         logger.info("exporting a people page");
 
