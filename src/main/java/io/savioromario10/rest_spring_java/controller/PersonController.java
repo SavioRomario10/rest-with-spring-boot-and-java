@@ -150,6 +150,40 @@ public class PersonController{
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @GetMapping(
+            value = "/{id}",
+            produces = MediaType.APPLICATION_PDF_VALUE)
+    @Operation(
+            summary = "Export people",
+            description = "Export peple with PDF",
+            tags = {"Person"},
+            responses = {
+                    @ApiResponse(
+                            description = "Success",
+                            responseCode = "200",
+                            content =
+                                @Content(mediaType = MediaType.APPLICATION_PDF_VALUE)),
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content)
+            }
+    )
+    //@CrossOrigin(origins = "http://localhost:8080")
+    public ResponseEntity<Resource> export(@PathVariable("id") Long id, HttpServletRequest request){
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
+
+        Resource file = service.exportingById(id, acceptHeader);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(acceptHeader))
+                .header(
+                        HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=person.pdf"
+                ).body(file);
+    }
+
     @PostMapping(
             produces = {
                     MediaType.APPLICATION_JSON_VALUE,

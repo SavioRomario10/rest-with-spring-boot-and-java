@@ -28,12 +28,12 @@ FROM books b
 		<property name="com.jaspersoft.studio.field.label" value="author"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
-	<field name="launchdate" class="java.sql.Timestamp">
+	<field name="launchdate" class="java.util.Date">
 		<property name="com.jaspersoft.studio.field.name" value="launchdate"/>
 		<property name="com.jaspersoft.studio.field.label" value="launchdate"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
 	</field>
-	<field name="price" class="java.math.BigDecimal">
+	<field name="price" class="java.lang.Double">
 		<property name="com.jaspersoft.studio.field.name" value="price"/>
 		<property name="com.jaspersoft.studio.field.label" value="price"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="books"/>
