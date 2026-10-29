@@ -7,6 +7,12 @@ cors:
 file:
   upload-dir: /uploads
 
+security:
+  jwt:
+    token:
+      secret-key: 53cr37
+      expire-lenght: 3600000
+
 email:
   subject: "Default Subject"
   message: "Default Message"
@@ -14,6 +20,7 @@ email:
 spring:
   application:
     name: rest_spring_java
+
   datasource:
     url: jdbc:postgresql://localhost:5432/db_rest_spring
     username: postgres
