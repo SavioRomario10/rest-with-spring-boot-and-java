@@ -32,11 +32,11 @@ public class User implements UserDetails, Serializable {
     @Column(name = "account_non_expired")
     private Boolean accountNonExpired;
 
-    @Column(name = "account_non_loched")
+    @Column(name = "account_non_locked")
     private Boolean accountNonLocked;
 
-    @Column(name = "credebtials_non_expired")
-    private Boolean credebtialsNonExpired;
+    @Column(name = "credentials_non_expired")
+    private Boolean credentialsNonExpired;
 
     @Column
     private Boolean enabled;
@@ -50,7 +50,7 @@ public class User implements UserDetails, Serializable {
 
     public User() {}
 
-    private List<String> getRoles(){
+    public List<String> getRoles(){
 
         List<String> roles = new ArrayList<>();
         for(Permission permission: permissions){
@@ -101,10 +101,10 @@ public class User implements UserDetails, Serializable {
         this.accountNonLocked = accountNonLocked;
     }
     public Boolean getCredebtialsNonExpired() {
-        return credebtialsNonExpired;
+        return credentialsNonExpired;
     }
     public void setCredebtialsNonExpired(Boolean credebtialsNonExpired) {
-        this.credebtialsNonExpired = credebtialsNonExpired;
+        this.credentialsNonExpired = credebtialsNonExpired;
     }
     public Boolean getEnabled() {
         return enabled;
