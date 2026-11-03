@@ -62,6 +62,8 @@ logging:
     io.savioromario10: DEBUG
 
 springdoc:
-  paths-to-match: /api/**
+  paths-to-match:
+    -/api/**
+    -/auth/**
   swagger-ui:
     use-root-path: true
